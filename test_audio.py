@@ -1,6 +1,9 @@
 import pyaudio
 import wave
 import sys
+from pynput import keyboard
+import threading
+import datetime
 
 form_1 = pyaudio.paInt16 # 16-bit resolution
 chans = 1 # 1 channel
@@ -13,31 +16,32 @@ wav_output_filename = 'test1.wav' # name of .wav file
 audio = pyaudio.PyAudio() # create pyaudio instantiation
 
 # create pyaudio stream
-stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                    input_device_index = dev_index,input = True, \
-                    frames_per_buffer=chunk)
-print("recording")
-frames = []
+def record():
+    stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                        input_device_index = dev_index,input = True, \
+                        frames_per_buffer=chunk)
+    print("recording")
+    frames = []
 
-# loop through stream and append audio chunks to frame array
-for ii in range(0,int((samp_rate/chunk)*record_secs)):
-    data = stream.read(chunk)
-    frames.append(data)
+    # loop through stream and append audio chunks to frame array
+    for ii in range(0,int((samp_rate/chunk)*record_secs)):
+        data = stream.read(chunk)
+        frames.append(data)
 
-print("finished recording")
+    print("finished recording")
 
-# stop the stream, close it, and terminate the pyaudio instantiation
-stream.stop_stream()
-stream.close()
-audio.terminate()
+    # stop the stream, close it, and terminate the pyaudio instantiation
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
 
-# save the audio frames as .wav file
-wavefile = wave.open(wav_output_filename,'wb')
-wavefile.setnchannels(chans)
-wavefile.setsampwidth(audio.get_sample_size(form_1))
-wavefile.setframerate(samp_rate)
-wavefile.writeframes(b''.join(frames))
-wavefile.close()
+    # save the audio frames as .wav file
+    wavefile = wave.open(wav_output_filename,'wb')
+    wavefile.setnchannels(chans)
+    wavefile.setsampwidth(audio.get_sample_size(form_1))
+    wavefile.setframerate(samp_rate)
+    wavefile.writeframes(b''.join(frames))
+    wavefile.close()
 
 
 class AudioFile:
@@ -66,7 +70,35 @@ class AudioFile:
         self.stream.close()
         self.p.terminate()
 
-# Usage example for pyaudio
-a = AudioFile("test1.wav")
-a.play()
-a.close()
+# https://stackoverflow.com/questions/66196634/loop-until-key-is-pressed-and-repeat
+def loading():
+    while running:
+        print("loading", datetime.datetime.now())
+
+def on_press(key):
+    global running
+
+    if key == keyboard.Key.f10:
+        # stop listener
+        return False
+
+def on_release(key):
+    global running  # inform function to assign (`=`) to external/global `running` instead of creating local `running`
+    
+    if key == keyboard.Key.f9:
+        # to stop loop in thread
+        running = False
+        
+#--- main ---
+
+with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    listener.join
+
+
+#while True:
+#    # Usage example for pyaudio
+#    except KeyboardInterrupt:
+#        record()
+#    a = AudioFile("test1.wav")
+#    a.play()
+#    a.close()
