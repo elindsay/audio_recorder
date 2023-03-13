@@ -1,4 +1,10 @@
 import pyaudio
+
+import gi
+gi.require_version('Gst', '1.0')
+from gi.repository import Gst, GObject, Gtk
+
+
 from playsound import playsound
 import wave
 import sys
@@ -6,6 +12,8 @@ import sys
 import keyboard
 import threading, time
 import datetime
+
+
 
 form_1 = pyaudio.paInt16 # 16-bit resolution
 chans = 1 # 1 channel
@@ -107,9 +115,7 @@ class AudioFile:
 
 def playing_audio():
     while True:
-        a = AudioFile("test1.wav")
-        a.play()
-        a.close()
+        playsound("//home//emma//dev//audio_recorder//test1.wav")
         time.sleep(3)
 
 def read_keystroke():
@@ -117,11 +123,11 @@ def read_keystroke():
         key = keyboard.read_event()
         print(key)
 
-#threading.Thread(target = playing_audio).start()
-#keystroke_thread = threading.Thread(target = read_keystroke)
-#keystroke_thread.start()
+threading.Thread(target = playing_audio).start()
+keystroke_thread = threading.Thread(target = read_keystroke)
+keystroke_thread.start()
 
-while True:
-    playsound("test1.wav")
+while False:
+    playsound("//home//emma//dev//audio_recorder//test1.wav")
     key = keyboard.read_event()
     print(key)
