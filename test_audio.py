@@ -78,14 +78,14 @@ def loading():
 def on_press(key):
     global running
 
-    if key == keyboard.Key.f10:
+    if key == keyboard.Key.a:
         # stop listener
         return False
 
 def on_release(key):
     global running  # inform function to assign (`=`) to external/global `running` instead of creating local `running`
     
-    if key == keyboard.Key.f9:
+    if key == keyboard.Key.b:
         # to stop loop in thread
         running = False
         
