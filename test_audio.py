@@ -1,8 +1,9 @@
 import pyaudio
 import wave
 import sys
-from pynput import keyboard
-import threading
+#from pynput import keyboard
+import keyboard
+import threading, time
 import datetime
 
 form_1 = pyaudio.paInt16 # 16-bit resolution
@@ -71,28 +72,28 @@ class AudioFile:
         self.p.terminate()
 
 # https://stackoverflow.com/questions/66196634/loop-until-key-is-pressed-and-repeat
-def loading():
-    while running:
-        print("loading", datetime.datetime.now())
+#def loading():
+#    while running:
+#        print("loading", datetime.datetime.now())
 
-def on_press(key):
-    global running
+#def on_press(key):
+#    global running
 
-    if key == keyboard.Key.a:
+#    if key == keyboard.Key.a:
         # stop listener
-        return False
+#        return False
 
-def on_release(key):
-    global running  # inform function to assign (`=`) to external/global `running` instead of creating local `running`
-    
-    if key == keyboard.Key.b:
-        # to stop loop in thread
+#def on_release(key):
+#    global running  # inform function to assign (`=`) to external/global `running` instead of creating local `running`
+#    if key == keyboard.Key.b:
+#        # to stop loop in thread
         running = False
-        
+
+
 #--- main ---
 
-with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
-    listener.join
+#with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+#    listener.join
 
 
 #while True:
@@ -102,3 +103,25 @@ with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
 #    a = AudioFile("test1.wav")
 #    a.play()
 #    a.close()
+
+def playing_audio():
+    while True:
+        a = AudioFile("test1.wav")
+        a.play()
+        a.close()
+        time.sleep(3)
+
+def read_keystroke():
+    while True:
+        key = keyboard.read_event()
+        print(key)
+
+#threading.Thread(target = playing_audio).start()
+keystroke_thread = threading.Thread(target = read_keystroke)
+keystroke_thread.start()
+
+while True:
+    a = AudioFile("test1.wav")
+    a.play()
+    a.close()
+    time.sleep(3)
