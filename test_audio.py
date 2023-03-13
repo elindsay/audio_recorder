@@ -1,4 +1,5 @@
 import pyaudio
+from playsound import playsound
 import wave
 import sys
 #from pynput import keyboard
@@ -117,11 +118,10 @@ def read_keystroke():
         print(key)
 
 #threading.Thread(target = playing_audio).start()
-keystroke_thread = threading.Thread(target = read_keystroke)
-keystroke_thread.start()
+#keystroke_thread = threading.Thread(target = read_keystroke)
+#keystroke_thread.start()
 
 while True:
-    a = AudioFile("test1.wav")
-    a.play()
-    a.close()
-    time.sleep(3)
+    playsound("test1.wav")
+    key = keyboard.read_event()
+    print(key)
