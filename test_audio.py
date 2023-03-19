@@ -96,7 +96,7 @@ class AudioFile:
 #    global running  # inform function to assign (`=`) to external/global `running` instead of creating local `running`
 #    if key == keyboard.Key.b:
 #        # to stop loop in thread
-        running = False
+#        running = False
 
 
 #--- main ---
