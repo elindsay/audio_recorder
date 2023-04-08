@@ -8,5 +8,6 @@ def play_loop():
         print(file)
         print(files)
         playsound("audio_files/"+file)
-        time.sleep(3)
+        time.sleep(1)
+        playsound.pause()
 
