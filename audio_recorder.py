@@ -5,7 +5,7 @@ chans = 1 # 1 channel
 samp_rate = 44100 # 44.1kHz sampling rate
 chunk = 4096 # 2^12 samples for buffer
 record_secs = 3 # seconds to record
-dev_index = 2 # device index found by p.get_device_info_by_index(ii)
+dev_index = 1 # device index found by p.get_device_info_by_index(ii)
 wav_output_filename = 'test1.wav' # name of .wav file
 
 audio = pyaudio.PyAudio() # create pyaudio instantiation
@@ -16,12 +16,12 @@ class AudioRecorder:
         self.recording = False
 
     def get_filename(self):
-        files = os.listdir("audio_files/")
+        files = os.listdir("audio_answers/")
         files.sort()
         filename = files[-1]
         print(filename)
         print(str(int(filename.split("_")[-1].split(".")[0])+1))
-        return "audio_files/audio_"+str(int(filename.split("_")[-1].split(".")[0])+1).zfill(3)+".wav"
+        return "audio_answers/audio_"+str(int(filename.split("_")[-1].split(".")[0])+1).zfill(3)+".wav"
 
     def record_audio(self):
         if not self.recording:

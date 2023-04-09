@@ -1,26 +1,15 @@
 import os, random, time, wave
-import threading, keyboard
+import threading
+#import keyboard
 import multiprocessing
 from audio_player import play_loop
 from audio_recorder import AudioRecorder
 from playsound import playsound
+import RPi.GPIO as GPIO
 
 ar = AudioRecorder()
 
-exit_event = threading.Event()
-p = multiprocessing.Process(target=playsound, args=('audio_files/audio_001.wav',))
-
-def play_loop():
-    while True:
-        files = os.listdir("audio_files/")
-        file = random.choice(files)
-        print(file)
-        print(files)
-        playsound("audio_files/"+file)
-        if exit_event.is_set():
-            print("breaking")
-            break
-
+p = multiprocessing.Process(target=play_loop)
 
 def read_keystrokes():
     while True:
@@ -28,13 +17,36 @@ def read_keystrokes():
         print(key)
         global p
         p.terminate()
-        time.sleep(5)
-        p = multiprocessing.Process(target=playsound, args=('audio_files/audio_001.wav',))
+        playsound("audio_questions/question.wav")
+        ar.record_audio()
+        time.sleep(1)
+        p = multiprocessing.Process(target=play_loop)
         p.start()
-        #ar.record_audio()
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(18, GPIO.IN)
+
+ar = AudioRecorder()
+
+def read_gpio():
+    last_state = GPIO.input(18)
+    while True:
+        state = GPIO.input(18)
+        if(last_state != state):
+            last_state = state
+            print("Button pushed") 
+            global p
+            p.terminate()
+            playsound("audio_questions/question.wav")
+            ar.record_audio()
+            p = multiprocessing.Process(target=play_loop)
+            p.start()
+            ar.record_audio()
 
 #threading.Thread(target = play_loop).start()
-threading.Thread(target = read_keystrokes).start()
+#threading.Thread(target = read_keystrokes).start()
+threading.Thread(target = read_gpio).start()
 if __name__ == '__main__':
     #time.sleep(1)
     p.start()

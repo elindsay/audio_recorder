@@ -3,11 +3,8 @@ from playsound import playsound
 
 def play_loop():
     while True:
-        files = os.listdir("audio_files/")
+        files = os.listdir("audio_answers/")
         file = random.choice(files)
         print(file)
         print(files)
-        playsound("audio_files/"+file)
-        time.sleep(1)
-        playsound.pause()
-
+        playsound("audio_answers/"+file)
