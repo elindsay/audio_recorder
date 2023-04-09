@@ -4,26 +4,30 @@ form_1 = pyaudio.paInt16 # 16-bit resolution
 chans = 1 # 1 channel
 samp_rate = 44100 # 44.1kHz sampling rate
 chunk = 4096 # 2^12 samples for buffer
-record_secs = 3 # seconds to record
+record_secs = 15 # seconds to record
 dev_index = 1 # device index found by p.get_device_info_by_index(ii)
 wav_output_filename = 'test1.wav' # name of .wav file
 
-audio = pyaudio.PyAudio() # create pyaudio instantiation
 
 # create pyaudio stream
 class AudioRecorder:
     def __init__(self):
         self.recording = False
 
-    def get_filename(self):
+    def get_last_filename(self):
         files = os.listdir("audio_answers/")
         files.sort()
         filename = files[-1]
+        return filename
+
+    def get_filename(self):
+        filename = self.get_last_filename()
         print(filename)
         print(str(int(filename.split("_")[-1].split(".")[0])+1))
         return "audio_answers/audio_"+str(int(filename.split("_")[-1].split(".")[0])+1).zfill(3)+".wav"
 
     def record_audio(self):
+        audio = pyaudio.PyAudio() # create pyaudio instantiation
         if not self.recording:
             self.recording = True
             filename = self.get_filename()
@@ -44,7 +48,7 @@ class AudioRecorder:
             # stop the stream, close it, and terminate the pyaudio instantiation
             stream.stop_stream()
             stream.close()
-            audio.terminate()
+
 
             # save the audio frames as .wav file
             wavefile = wave.open(filename,'wb')

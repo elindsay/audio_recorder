@@ -45,16 +45,23 @@ def read_gpio():
             print("Button pushed") 
             global p
             p.terminate()
-            playsound("audio_questions/question.wav")
+            p = multiprocessing.Process(target=playsound, args=("audio_questions/question.wav",))
+            p.start()
+            time.sleep(8)
+            p.terminate()
             ar.record_audio()
+            filename ="audio_answers/"+ ar.get_last_filename()
+            print(filename)
+            p = multiprocessing.Process(target=playsound, args=(filename,))
+            p.start()
+            time.sleep(15)
+            p.terminate()
             p = multiprocessing.Process(target=play_loop)
             p.start()
-            ar.record_audio()
 
 #threading.Thread(target = play_loop).start()
-threading.Thread(target = read_keystrokes).start()
-#threading.Thread(target = read_gpio).start()
+#threading.Thread(target = read_keystrokes).start()
+threading.Thread(target = read_gpio).start()
 if __name__ == '__main__':
     #time.sleep(1)
     p.start()
-
