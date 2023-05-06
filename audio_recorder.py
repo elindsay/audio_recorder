@@ -5,9 +5,11 @@ chans = 1 # 1 channel
 samp_rate = 44100 # 44.1kHz sampling rate
 chunk = 4096 # 2^12 samples for buffer
 record_secs = 15 # seconds to record
-dev_index = 1 # device index found by p.get_device_info_by_index(ii)
+dev_index = 7 # device index found by p.get_device_info_by_index(ii)
 wav_output_filename = 'test1.wav' # name of .wav file
 
+answer_directory = "/home/emma/dev/audio_recorder/audio_answers/"
+question_directory = "/home/emma/dev/audio_recorder/audio_questions/"
 
 # create pyaudio stream
 class AudioRecorder:
@@ -15,7 +17,7 @@ class AudioRecorder:
         self.recording = False
 
     def get_last_filename(self):
-        files = os.listdir("audio_answers/")
+        files = os.listdir(answer_directory)
         files.sort()
         filename = files[-1]
         return filename
@@ -24,7 +26,7 @@ class AudioRecorder:
         filename = self.get_last_filename()
         print(filename)
         print(str(int(filename.split("_")[-1].split(".")[0])+1))
-        return "audio_answers/audio_"+str(int(filename.split("_")[-1].split(".")[0])+1).zfill(3)+".wav"
+        return answer_directory+"audio_"+str(int(filename.split("_")[-1].split(".")[0])+1).zfill(3)+".wav"
 
     def record_audio(self):
         audio = pyaudio.PyAudio() # create pyaudio instantiation

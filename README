@@ -13,3 +13,26 @@ for i in range(0, numdevices):
 
 Volume:
 sudo amixer cset numid=1 100%
+
+bash -c '/usr/bin/python3 /home/emma/dev/audio_recorder/audio_arcade_main.py > /home/emma/startup.log 2>1' &
+
+Volume:
+sudo amixer cset numid=1 100%
+
+pcm.!default {
+  type asym
+  capture.pcm "mic"
+  playback.pcm "speaker"
+}
+pcm.mic {
+  type plug
+  slave {
+    pcm "hw:3,0"
+  }
+}
+pcm.speaker {
+  type plug
+  slave {
+    pcm "hw:0,0"
+  }
+}
